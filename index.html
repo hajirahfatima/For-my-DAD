@@ -1,95 +1,768 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>our File For Dad</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Muhammad Munir | Enterprise Multi-Cloud Architect & MCT</title>
+  <style>
+    /* --- MIDNIGHT BLUE PALETTE & RESET --- */
+    :root {
+      --bg: #020817; 
+      --card-bg: rgba(15, 23, 42, 0.75); 
+      --card-border: rgba(56, 189, 248, 0.2);
+      --accent-cyan: #38bdf8; 
+      --accent-blue: #2563eb; 
+      --accent-glow: #00d8ff;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+    html { scroll-behavior: smooth; overflow-x: hidden; }
+    body { background-color: var(--bg); color: var(--text-main); overflow-x: hidden; width: 100%; }
+
+    /* --- FIXED PARALLAX BACKGROUND LAYER --- */
+    .global-grid {
+      position: fixed;
+      top: -20%; left: 0; width: 100%; height: 140%;
+      background-image: 
+        linear-gradient(to right, rgba(56, 189, 248, 0.04) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(56, 189, 248, 0.04) 1px, transparent 1px);
+      background-size: 50px 50px;
+      pointer-events: none;
+      z-index: 0;
+      will-change: transform;
+    }
+
+    /* Ambient Glowing Blue Nodes */
+    .glow-node {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(110px);
+      pointer-events: none;
+      z-index: 1;
+      will-change: transform;
+    }
+    .node-1 { width: clamp(250px, 40vw, 500px); height: clamp(250px, 40vw, 500px); background: rgba(37, 99, 235, 0.22); top: 2%; left: -5%; }
+    .node-2 { width: clamp(280px, 45vw, 600px); height: clamp(280px, 45vw, 600px); background: rgba(56, 189, 248, 0.15); top: 30%; right: -10%; }
+    .node-3 { width: clamp(250px, 40vw, 550px); height: clamp(250px, 40vw, 550px); background: rgba(14, 165, 233, 0.18); top: 60%; left: -8%; }
+    .node-4 { width: clamp(280px, 50vw, 650px); height: clamp(280px, 50vw, 650px); background: rgba(29, 78, 216, 0.2); top: 85%; right: -5%; }
+
+    /* --- NAVIGATION BAR --- */
+    nav {
+      position: fixed;
+      top: 0; left: 0; width: 100%;
+      padding: 12px 4%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(2, 8, 23, 0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      z-index: 100;
+      border-bottom: 1px solid rgba(56, 189, 248, 0.12);
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .logo { font-size: clamp(1rem, 3vw, 1.25rem); font-weight: 800; color: #fff; letter-spacing: 0.5px; cursor: pointer; transition: transform 0.3s ease; }
+    .logo:hover { transform: scale(1.03); }
+    .logo span { color: var(--accent-cyan); text-shadow: 0 0 10px rgba(56, 189, 248, 0.5); }
+    
+    .nav-links { display: flex; gap: 12px; list-style: none; flex-wrap: wrap; justify-content: center; }
+    .nav-links a { 
+      color: var(--text-muted); 
+      text-decoration: none; 
+      font-size: clamp(0.75rem, 2vw, 0.88rem); 
+      font-weight: 600; 
+      position: relative;
+      padding: 4px 0;
+      transition: color 0.3s ease; 
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 0%; height: 2px;
+      background: var(--accent-cyan);
+      box-shadow: 0 0 8px var(--accent-cyan);
+      transition: width 0.3s ease;
+    }
+    .nav-links a:hover { color: #fff; }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* --- SECTION HEADERS --- */
+    .section-header { text-align: center; margin-bottom: 40px; position: relative; z-index: 2; padding: 0 10px; }
+    .section-header h2 { font-size: clamp(1.6rem, 5vw, 2.4rem); font-weight: 800; margin-bottom: 10px; color: #fff; }
+    .section-header p { color: var(--text-muted); font-size: clamp(0.85rem, 2.5vw, 1rem); }
+
+    /* --- SECTION 1: HERO --- */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 140px 20px 60px;
+      z-index: 2;
+    }
+
+    .badge-container { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; justify-content: center; }
+    .badge {
+      background: rgba(56, 189, 248, 0.08);
+      border: 1px solid var(--accent-cyan);
+      color: var(--accent-cyan);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: clamp(0.7rem, 2vw, 0.82rem);
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .badge:hover {
+      background: var(--accent-cyan);
+      color: #020817;
+      box-shadow: 0 0 15px var(--accent-cyan);
+      transform: translateY(-3px) scale(1.04);
+    }
+
+    .hero-title {
+      font-size: clamp(2.1rem, 7vw, 4rem);
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 15px;
+      background: linear-gradient(135deg, #ffffff 30%, #38bdf8 70%, #2563eb 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      will-change: transform;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(0.9rem, 3vw, 1.2rem);
+      color: var(--text-muted);
+      max-width: 800px;
+      line-height: 1.6;
+      margin-bottom: 30px;
+      will-change: transform;
+      padding: 0 10px;
+    }
+
+    .terminal-box {
+      background: rgba(10, 16, 30, 0.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-family: 'Courier New', monospace;
+      color: var(--accent-cyan);
+      font-size: clamp(0.8rem, 2.5vw, 1rem);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+      will-change: transform;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+      max-width: 100%;
+      word-break: break-word;
+    }
+    .terminal-box:hover {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 25px rgba(56, 189, 248, 0.35);
+      transform: translateY(-4px) scale(1.02);
+    }
+    .cursor { animation: blink 0.8s infinite; }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+    /* --- SECTION 2: VIBE CODING PIPELINE --- */
+    .pipeline-section {
+      position: relative;
+      padding: 60px 20px;
+      max-width: 1100px;
+      margin: 0 auto;
+      z-index: 2;
+    }
+
+    .pipeline-container {
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: clamp(20px, 4vw, 35px);
+      position: relative;
+      transition: border-color 0.4s ease, box-shadow 0.4s ease;
+    }
+    .pipeline-container:hover {
+      border-color: rgba(56, 189, 248, 0.4);
+      box-shadow: 0 10px 30px rgba(37, 99, 235, 0.25);
+    }
+
+    .pipeline-steps { 
+      display: flex; 
+      justify-content: space-between; 
+      position: relative; 
+      z-index: 2; 
+      gap: 10px;
+    }
+    .pipeline-step {
+      background: #0a1120;
+      border: 2px solid #1e293b;
+      padding: 12px 16px;
+      border-radius: 30px;
+      font-weight: 700;
+      color: var(--text-muted);
+      font-size: clamp(0.75rem, 2vw, 0.9rem);
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      flex: 1;
+    }
+    .pipeline-step:hover {
+      border-color: var(--accent-cyan);
+      color: #fff;
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+    }
+    .pipeline-step.active {
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+      transform: scale(1.03);
+    }
+
+    .pipeline-track {
+      position: absolute; top: 50%; left: 8%; right: 8%; height: 4px;
+      background: #1e293b; z-index: 1; transform: translateY(-50%);
+    }
+
+    .data-packet {
+      position: absolute; top: 50%; left: 8%; width: 16px; height: 16px;
+      background: var(--accent-cyan); border-radius: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 18px var(--accent-cyan);
+      transition: left 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 2;
+    }
+
+    /* --- CARDS GRID (EXPERIENCE & PROJECTS) --- */
+    .experience-section, .projects-section, .skills-section {
+      position: relative;
+      padding: 60px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+      z-index: 2;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid var(--card-border);
+      padding: clamp(20px, 4vw, 30px);
+      border-radius: 16px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.12), transparent);
+      transition: left 0.6s ease;
+    }
+
+    .card:hover::before { left: 100%; }
+
+    .card:hover {
+      transform: translateY(-8px) scale(1.02);
+      border-color: var(--accent-cyan);
+      background-color: rgba(30, 41, 59, 0.85);
+      box-shadow: 0 20px 40px rgba(37, 99, 235, 0.3), 0 0 20px rgba(56, 189, 248, 0.2);
+    }
+
+    .card-icon {
+      width: 36px; height: 36px; margin-bottom: 14px;
+      stroke: var(--accent-cyan); fill: none; stroke-width: 2;
+      stroke-linecap: round; stroke-linejoin: round;
+      transition: transform 0.4s ease, stroke 0.4s ease;
+    }
+
+    .card:hover .card-icon {
+      transform: rotate(8deg) scale(1.15);
+      stroke: #fff;
+    }
+
+    .card h3 { font-size: clamp(1.05rem, 3vw, 1.25rem); margin-bottom: 6px; color: #fff; transition: color 0.3s; }
+    .card:hover h3 { color: var(--accent-cyan); }
+    .card .subtitle { color: var(--accent-cyan); font-size: 0.82rem; font-weight: 600; margin-bottom: 12px; }
+    .card p { color: var(--text-muted); line-height: 1.5; font-size: 0.88rem; }
+
+    /* --- SKILLS TAG CLOUD --- */
+    .skills-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .skill-tag {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(56, 189, 248, 0.15);
+      color: var(--text-main);
+      padding: 8px 16px;
+      border-radius: 30px;
+      font-size: clamp(0.78rem, 2vw, 0.88rem);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .skill-tag:hover {
+      background: var(--accent-cyan);
+      color: #020817;
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 18px var(--accent-cyan);
+      transform: translateY(-4px) scale(1.05);
+    }
+
+    /* --- CERTIFICATIONS CAROUSEL & STATS --- */
+    .results-section {
+      padding: 60px 20px;
+      background: rgba(10, 16, 30, 0.85);
+      border-top: 1px solid rgba(56, 189, 248, 0.1);
+      border-bottom: 1px solid rgba(56, 189, 248, 0.1);
+      position: relative;
+      z-index: 2;
+    }
+
+    .stats-container {
+      max-width: 1000px;
+      margin: 0 auto 40px;
+      display: flex;
+      justify-content: space-around;
+      text-align: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .stat-box {
+      padding: 12px 20px;
+      border-radius: 12px;
+      transition: transform 0.3s ease, background 0.3s ease;
+      cursor: pointer;
+      flex: 1 1 180px;
+    }
+
+    .stat-box:hover {
+      transform: translateY(-5px);
+      background: rgba(56, 189, 248, 0.05);
+    }
+
+    .stat-number { font-size: clamp(2.2rem, 6vw, 3.2rem); font-weight: 800; color: var(--accent-cyan); display: block; }
+    .stat-label { color: var(--text-muted); font-size: clamp(0.8rem, 2vw, 0.9rem); margin-top: 4px; }
+
+    .carousel { overflow: hidden; white-space: nowrap; position: relative; width: 100%; }
+    .carousel::before, .carousel::after {
+      content: ""; position: absolute; top: 0; width: 60px; height: 100%; z-index: 2; pointer-events: none;
+    }
+    .carousel::before { left: 0; background: linear-gradient(to right, rgba(10, 16, 30, 1), transparent); }
+    .carousel::after { right: 0; background: linear-gradient(to left, rgba(10, 16, 30, 1), transparent); }
+
+    .carousel-track { 
+      display: inline-block; 
+      animation: scrollLogos 25s linear infinite; 
+    }
+
+    .carousel:hover .carousel-track { animation-play-state: paused; }
+
+    .logo-item { 
+      display: inline-block; font-size: clamp(0.8rem, 2vw, 0.95rem); font-weight: 700; color: var(--text-muted); 
+      margin: 0 8px; padding: 6px 14px; border: 1px solid rgba(56, 189, 248, 0.15); 
+      border-radius: 10px; background: rgba(15, 23, 42, 0.6);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .logo-item:hover {
+      color: #fff;
+      border-color: var(--accent-cyan);
+      background: rgba(30, 41, 59, 0.9);
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+      transform: scale(1.05);
+    }
+
+    @keyframes scrollLogos { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+    /* --- FOOTER / CONTACT --- */
+    footer {
+      padding: 50px 20px 30px; text-align: center; position: relative; z-index: 2;
+      border-top: 1px solid rgba(56, 189, 248, 0.1);
+    }
+
+    .contact-links { display: flex; gap: 12px; justify-content: center; margin: 25px 0; flex-wrap: wrap; }
+    .contact-btn {
+      color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 30px;
+      background: rgba(15, 23, 42, 0.8); border: 1px solid var(--card-border);
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); font-size: clamp(0.8rem, 2vw, 0.9rem); font-weight: 600;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .contact-btn:hover { 
+      background: var(--accent-cyan); 
+      color: #020817; 
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 20px var(--accent-cyan); 
+      transform: translateY(-3px) scale(1.04);
+    }
+
+    /* --- MOBILE RESPONSIVE MEDIA QUERIES --- */
+    @media (max-width: 600px) {
+      nav { justify-content: center; text-align: center; padding: 10px 12px; }
+      .nav-links { gap: 8px; }
+      .hero { padding-top: 150px; }
+      .pipeline-steps { flex-direction: column; align-items: stretch; }
+      .pipeline-track { display: none; }
+      .data-packet { display: none; }
+      .pipeline-step { margin-bottom: 6px; }
+      .contact-links { flex-direction: column; align-items: center; }
+      .contact-btn { width: 100%; max-width: 260px; text-align: center; }
+    }
+  </style>
 </head>
+<body>
 
-<body bgcolor="99D9FF">
-    <h1 style="color: rgb(12, 4, 168);">Hi baba we made this together and we learned to use live share</h1>
-    <table border="4" bgcolor="4F6EF7" style="background-color:white ; color: #0a70ff;">
-        <tr>
-            <td>❤️</td>
-        </tr>
-    </table>
-    <h5>Please allow us roblox</h5>
-    <hr>
-    <table border="4" bgcolor="4F6EF7" style="background-color:#0a70ff ; color: white;">
-        <tr>
-            <td>❤️</td>
-        </tr>
-    </table>
-    <h5>Plese take us to Toyshop</h5>
-    <hr>
-    <table border="4" bgcolor="4F6EF7" style="background-color:white ; color: #0a70ff;">
-        <tr>
-            <td>❤️</td>
-        </tr>
-    </table style="background-color:#0a70ff ; color: white;">
-    <h5>Please take us to eat ice cream someday</h5>
-    <hr>
-    <table border="4" bgcolor="4F6EF7" style="background-color:#0a70ff ; color: white;">
-        <tr>
-            <td>❤️</td>
-        </tr>
-    </table style="background-color:#0a70ff ; color: white;">
-    <h5>Please be proud of us</h5>
-    <hr>
-    <table border="4" bgcolor="4F6EF7" style="background-color:white ; color: #0a70ff;">
-        <tr>
-            <td>❤️</td>
-        </tr>
-    </table style=>
-    <h5>Please like this</h5>
-    <hr>
-    <table border="4" bgcolor="4F6EF7">
-        <tr>
-            <td>❤️</td>
-        </tr>
-    </table>
-    <h5>Please always be that dad that you are now</h5>
-    <hr>
-    <table border="4" bgcolor="4F6EF7" style="background-color:white ; color: #0a70ff;">
-        <tr>
-            <td>❤️</td>
-        </tr>
-    </table>
-    <h5>Please Love this this took us a little while</h5>
-    <hr>
-    <table border="4" bgcolor="4F6EF7">
-        <tr>
-            <td>❤️</td>
-        </tr>
-    </table>
-    <h5>Please stay happy</h5>
-    <hr>
-    <p style="color:#0a70ff">Dad today we learned something new together we made a small website using HTML and
-        instead of working separately we figured out how to use a tool called Live Share inside Visual Studio Code it
-        let both of us type at the same time and instantly see each other/s changes on our screens just like Google Docs
-        but for coding it felt amazing to collaborate in real life and we understood how developers work together even
-        if they are far apart we are proud that we solved it step by step and made it work and now we know how to build
-        and share websites together.</p>
-    <img src="Copilot_20260324_162102.png" alt="W">
-    <h1 style="color: rgb(0, 42, 255); background-color: rgb(88, 122, 255);">We learned something by ourselves which you
-        wanted us to</h1>
+  <!-- FIXED PARALLAX BLUE GRID & GLOW NODES -->
+  <div class="global-grid" id="parallax-grid"></div>
+  <div class="glow-node node-1" id="node-1"></div>
+  <div class="glow-node node-2" id="node-2"></div>
+  <div class="glow-node node-3" id="node-3"></div>
+  <div class="glow-node node-4" id="node-4"></div>
 
- <h2>Will you take us to Toyshop after this</h2>
+  <!-- NAVIGATION BAR -->
+  <nav>
+    <div class="logo">MUHAMMAD <span>MUNIR</span></div>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#pipeline">Vibe Coding</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#certifications">Certifications</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
 
-<button onclick="sayYes()">Yes ✅</button>
-<button onclick="sayNo()">No ❌</button>
+  <!-- SECTION 1: HERO -->
+  <section class="hero" id="about">
+    <div class="badge-container">
+      <span class="badge">MCT (Microsoft Certified Trainer)</span>
+      <span class="badge">Cisco CCSI Instructor</span>
+      <span class="badge">Huawei HCIA Certified</span>
+    </div>
+    <h1 class="hero-title" id="hero-title">Muhammad Munir</h1>
+    <p class="hero-subtitle" id="hero-subtitle">
+      Multi-Cloud Solutions Architect & Senior Technical Trainer with over 18+ years of enterprise experience across IT Operations, Cybersecurity, and AI-Driven Software Engineering[cite: 1].
+    </p>
+    <div class="terminal-box" id="hero-terminal">
+      > Architect.deploy("<span id="typed-text"></span><span class="cursor">|</span>")
+    </div>
+  </section>
 
-<script>
-  function sayYes() {
-    alert("Thank you, you are the best!");
-  }
+  <!-- SECTION 2: VIBE CODING PIPELINE -->
+  <section class="pipeline-section" id="pipeline">
+    <div class="section-header">
+      <h2>AI Acceleration & "Vibe Coding" Engine</h2>
+      <p>Combining Gemini upstream design with Cursor IDE execution to deliver features under 20 mins[cite: 1].</p>
+    </div>
 
-  function sayNo() {
-    alert("Please take us we tried our best to impress you");
-  }
-</script>
+    <div class="pipeline-container">
+      <div class="pipeline-track"></div>
+      <div class="data-packet" id="packet"></div>
+      <div class="pipeline-steps">
+        <div class="pipeline-step active" id="step-0">1. Gemini Architecture</div>
+        <div class="pipeline-step" id="step-1">2. .cursor Rules Engine</div>
+        <div class="pipeline-step" id="step-2">3. .NET 8 / React 18 Launch</div>
+      </div>
+    </div>
+  </section>
 
+  <!-- SECTION 3: EXPERIENCE -->
+  <section class="experience-section" id="experience">
+    <div class="section-header">
+      <h2>Professional Experience & Impact</h2>
+      <p>A proven record of enterprise infrastructure engineering and academic leadership[cite: 1].</p>
+    </div>
+
+    <div class="cards-grid">
+      <div class="card p-card-1">
+        <svg class="card-icon" viewBox="0 0 24 24"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+        <h3>KIRAN Hospital</h3>
+        <div class="subtitle">Information Technology Professional (2006 - Present)[cite: 1]</div>
+        <p>Administers HMIS servers, Active Directory, database backups, and wired/wireless network security infrastructure[cite: 1].</p>
+      </div>
+
+      <div class="card p-card-2" onmouseenter="morphIcon('icon-2', 'gear')" onmouseleave="morphIcon('icon-2', 'search')">
+        <svg class="card-icon" id="icon-2" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <h3>Vibe Coding Architect</h3>
+        <div class="subtitle">Dimensional Systems Freelance (2025 - 2026)[cite: 1]</div>
+        <p>Codified complex domain skills into custom Cursor AI rules, accelerating architectural handoff to execution for multi-repo .NET 8 services[cite: 1].</p>
+      </div>
+
+      <div class="card p-card-3">
+        <svg class="card-icon" viewBox="0 0 24 24"><path d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0112 20.055a11.952 11.952 0 01-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>
+        <h3>University & Academic Faculty</h3>
+        <div class="subtitle">University of Karachi & NED Academy[cite: 1]</div>
+        <p>Delivers advanced lectures on Data Communications, Microprocessors, Cyber Security Essentials (pfSense, Wazuh SIEM), and Cloud Computing models[cite: 1].</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4: PROJECTS -->
+  <section class="projects-section" id="projects">
+    <div class="section-header">
+      <h2>Featured Infrastructure Projects</h2>
+      <p>Architecting multi-vendor enterprise labs and security modernization programs[cite: 1].</p>
+    </div>
+
+    <div class="cards-grid">
+      <div class="card proj-card-1">
+        <svg class="card-icon" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        <h3>Multi-Vendor IT Lab Infrastructure</h3>
+        <div class="subtitle">SAWF Foundation (2025 - Present)[cite: 1]</div>
+        <p>Deployed Dell/HP servers running VMware ESXi/Proxmox alongside Cisco routing/switching and ASA firewalls for advanced security testing[cite: 1].</p>
+      </div>
+
+      <div class="card proj-card-2">
+        <svg class="card-icon" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        <h3>Hospital Security & Network Upgrade</h3>
+        <div class="subtitle">KIRAN Hospital[cite: 1]</div>
+        <p>Upgraded network reliability by installing Active Directory on PowerEdge blade servers, deploying IP camera systems, and managing CT scanner backups[cite: 1].</p>
+      </div>
+
+      <div class="card proj-card-3">
+        <svg class="card-icon" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        <h3>IoT Smart Systems Integration</h3>
+        <div class="subtitle">University of Karachi[cite: 1]</div>
+        <p>Directed capstone projects focusing on embedded microcontrollers (Arduino, Raspberry Pi) to build IoT home automation frameworks[cite: 1].</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5: SKILLS -->
+  <section class="skills-section" id="skills">
+    <div class="section-header">
+      <h2>Comprehensive Technical Inventory</h2>
+      <p>A broad spectrum of multi-cloud, networking, cybersecurity, and teaching skills[cite: 1].</p>
+    </div>
+
+    <div class="skills-container">
+      <span class="skill-tag">AWS Architecture[cite: 1]</span>
+      <span class="skill-tag">Microsoft Azure AD[cite: 1]</span>
+      <span class="skill-tag">Cisco Routers & Switches[cite: 1]</span>
+      <span class="skill-tag">Wazuh SIEM & pfSense[cite: 1]</span>
+      <span class="skill-tag">VMware vSphere & ESXi[cite: 1]</span>
+      <span class="skill-tag">Proxmox Virtualization[cite: 1]</span>
+      <span class="skill-tag">.NET 8 & React 18[cite: 1]</span>
+      <span class="skill-tag">Python & C++[cite: 1]</span>
+      <span class="skill-tag">Palo Alto & Fortinet Firewalls[cite: 1]</span>
+      <span class="skill-tag">IoT Microcontrollers[cite: 1]</span>
+      <span class="skill-tag">Active Directory[cite: 1]</span>
+      <span class="skill-tag">SQL Server & Database Admin[cite: 1]</span>
+    </div>
+  </section>
+
+  <!-- SECTION 6: STATS & CERTIFICATIONS -->
+  <section class="results-section" id="certifications">
+    <div class="stats-container" id="stats-trigger">
+      <div class="stat-box">
+        <span class="stat-number" data-target="18">0</span>
+        <span class="stat-label">Years Enterprise Experience[cite: 1]</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-number" data-target="25">0</span>
+        <span class="stat-label">Professional Certifications[cite: 1]</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-number" data-target="1000">0</span>
+        <span class="stat-label">Engineers & Students Trained[cite: 1]</span>
+      </div>
+    </div>
+
+    <div class="carousel">
+      <div class="carousel-track">
+        <span class="logo-item">Microsoft MCT[cite: 1]</span>
+        <span class="logo-item">Azure Administrator (AZ-104)[cite: 1]</span>
+        <span class="logo-item">AWS Certified Solutions Architect[cite: 1]</span>
+        <span class="logo-item">Cisco CCNP Enterprise[cite: 1]</span>
+        <span class="logo-item">Cisco CyberOps Associate[cite: 1]</span>
+        <span class="logo-item">VMware VCP - Data Center[cite: 1]</span>
+        <span class="logo-item">Huawei HCIA Cloud[cite: 1]</span>
+        <span class="logo-item">Fortinet NSE Security[cite: 1]</span>
+        <!-- Duplicated for Loop -->
+        <span class="logo-item">Microsoft MCT[cite: 1]</span>
+        <span class="logo-item">Azure Administrator (AZ-104)[cite: 1]</span>
+        <span class="logo-item">AWS Certified Solutions Architect[cite: 1]</span>
+        <span class="logo-item">Cisco CCNP Enterprise[cite: 1]</span>
+        <span class="logo-item">Cisco CyberOps Associate[cite: 1]</span>
+        <span class="logo-item">VMware VCP - Data Center[cite: 1]</span>
+        <span class="logo-item">Huawei HCIA Cloud[cite: 1]</span>
+        <span class="logo-item">Fortinet NSE Security[cite: 1]</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER / CONTACT -->
+  <footer id="contact">
+    <h2 style="font-size: clamp(1.4rem, 4vw, 1.8rem); margin-bottom: 10px; color: #fff;">Get In Touch</h2>
+    <p style="color: var(--text-muted); font-size: clamp(0.85rem, 2vw, 0.95rem);">Federal B Area, Karachi, Pakistan[cite: 1]</p>
+    
+    <div class="contact-links">
+      <a href="mailto:sendtomunir@gmail.com" class="contact-btn">Email Direct[cite: 1]</a>
+      <a href="https://www.linkedin.com/in/sirmunir" target="_blank" class="contact-btn">LinkedIn Profile[cite: 1]</a>
+      <a href="https://www.credly.com/users/sirmunir" target="_blank" class="contact-btn">Credly Badges[cite: 1]</a>
+    </div>
+
+    <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 30px;">
+      &copy; 2026 Muhammad Munir. Built with Dark Blue Aesthetics & Smooth Inertial Physics.
+    </p>
+  </footer>
+
+  <script>
+    // --- 1. LERP SMOOTH PARALLAX ENGINE ---
+    let currentScroll = 0;
+    let targetScroll = 0;
+    const ease = 0.08;
+
+    const grid = document.getElementById('parallax-grid');
+    const heroTitle = document.getElementById('hero-title');
+    const heroSubtitle = document.getElementById('hero-subtitle');
+    const heroTerminal = document.getElementById('hero-terminal');
+    
+    const node1 = document.getElementById('node-1');
+    const node2 = document.getElementById('node-2');
+    const node3 = document.getElementById('node-3');
+    const node4 = document.getElementById('node-4');
+
+    function lerp(start, end, factor) {
+      return start + (end - start) * factor;
+    }
+
+    function updateParallax() {
+      targetScroll = window.scrollY;
+      currentScroll = lerp(currentScroll, targetScroll, ease);
+
+      if (grid) grid.style.transform = `translateY(${currentScroll * 0.12}px)`;
+
+      if (node1) node1.style.transform = `translateY(${currentScroll * -0.12}px)`;
+      if (node2) node2.style.transform = `translateY(${currentScroll * 0.15}px)`;
+      if (node3) node3.style.transform = `translateY(${currentScroll * -0.10}px)`;
+      if (node4) node4.style.transform = `translateY(${currentScroll * 0.12}px)`;
+
+      if (currentScroll < 1000) {
+        if (heroTitle) heroTitle.style.transform = `translateY(${currentScroll * 0.20}px)`;
+        if (heroSubtitle) heroSubtitle.style.transform = `translateY(${currentScroll * 0.12}px)`;
+        if (heroTerminal) heroTerminal.style.transform = `translateY(${currentScroll * 0.08}px)`;
+      }
+
+      requestAnimationFrame(updateParallax);
+    }
+
+    requestAnimationFrame(updateParallax);
+
+    // --- 2. TYPING TERMINAL EFFECT ---
+    const phrases = [
+      "Azure & AWS Multi-Cloud[cite: 1]",
+      "Cisco Enterprise Networks[cite: 1]",
+      "Cybersecurity & pfSense[cite: 1]",
+      "Vibe Coding .NET 8 / React 18[cite: 1]"
+    ];
+    let wordIdx = 0, charIdx = 0, isDeleting = false;
+    const typedTextEl = document.getElementById("typed-text");
+
+    function typeEffect() {
+      const currentWord = phrases[wordIdx];
+      typedTextEl.textContent = isDeleting 
+        ? currentWord.substring(0, charIdx - 1) 
+        : currentWord.substring(0, charIdx + 1);
+      
+      charIdx += isDeleting ? -1 : 1;
+      let speed = isDeleting ? 40 : 80;
+
+      if (!isDeleting && charIdx === currentWord.length) {
+        speed = 1800; isDeleting = true;
+      } else if (isDeleting && charIdx === 0) {
+        isDeleting = false;
+        wordIdx = (wordIdx + 1) % phrases.length;
+        speed = 400;
+      }
+      setTimeout(typeEffect, speed);
+    }
+    document.addEventListener("DOMContentLoaded", typeEffect);
+
+    // --- 3. PIPELINE AUTOMATION ---
+    const packet = document.getElementById('packet');
+    const positions = ['8%', '50%', '90%'];
+    let currentStep = 0;
+
+    setInterval(() => {
+      document.getElementById(`step-${currentStep}`).classList.remove('active');
+      currentStep = (currentStep + 1) % 3;
+      if (packet) packet.style.left = positions[currentStep];
+      document.getElementById(`step-${currentStep}`).classList.add('active');
+    }, 2800);
+
+    // --- 4. ICON MORPHING ON HOVER ---
+    const searchPath = "M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z";
+    const gearPath = "M12 15a3 3 0 100-6 3 3 0 000 6z M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z";
+
+    function morphIcon(iconId, targetType) {
+      document.querySelector(`#${iconId} path`).setAttribute('d', targetType === 'gear' ? gearPath : searchPath);
+    }
+
+    // --- 5. STATS COUNTING OBSERVER ---
+    const stats = document.querySelectorAll('.stat-number');
+    let counted = false;
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !counted) {
+          stats.forEach(stat => {
+            const target = parseInt(stat.getAttribute('data-target'));
+            let current = 0;
+            const increment = Math.ceil(target / 45);
+            
+            const timer = setInterval(() => {
+              current += increment;
+              if (current >= target) {
+                stat.innerText = target + '+';
+                clearInterval(timer);
+              } else {
+                stat.innerText = current;
+              }
+            }, 30);
+          });
+          counted = true;
+        }
+      });
+    }, { threshold: 0.2 });
+
+    observer.observe(document.getElementById('stats-trigger'));
+  </script>
 </body>
-
 </html>
